@@ -84,13 +84,13 @@ pytest
 
 ---
 
-### 🛡️ License
+### License
 
 MIT License. See [LICENSE](./LICENSE) for details.
 
 ---
 
-### 🔐 Security Notes
+### Security Notes
 
 * API keys are stored in `.env` and loaded with `python-dotenv`.
 * `.env` is included in `.gitignore` to prevent accidental exposure.
