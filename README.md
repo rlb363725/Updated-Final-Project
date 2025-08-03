@@ -1,26 +1,99 @@
-# Freestyle-Project---Stern-Summer-2025-Omar-Mutlak-and-Ricky-Baum-
-College Football Matchup Analyzer - Python
+## College Football Matchup Analyzer
 
-# College Football Matchup Analyzer 🏈
+This tool compares two FBS teams' season stats using data from the [CollegeFootballData API](https://collegefootballdata.com/), predicts a score based on offensive/defensive yardage, and visualizes a stat comparison using Plotly.
 
-This tool lets you simulate a game between any two NCAA football teams using real stats from the [College Football Data API](https://collegefootballdata.com).
+### Features
 
-## Features
-- Pulls offensive and defensive stats for each team
-- Predicts score and winner based on metrics and randomness
-- CLI interface (command line)
+* Retrieves live team stats from the CollegeFootballData API
+* Predicts scores based on total offensive and defensive yards
+* Visualizes side-by-side stat comparisons using Plotly
+* Command-line interface for interactive use
+* Includes automated tests using Pytest
 
-## Setup
+---
 
-1. Clone the repo
-2. Create a virtual environment (optional but recommended)
-3. Create `.env` file:
-CFB_API_KEY=your_actual_key
-4. Install dependencies:
+### How It Works
+
+1. You input two FBS teams and a season year.
+2. The app fetches season-long team stats from the API.
+3. It calculates predicted scores using total yards gained and allowed.
+4. A bar graph of offensive and defensive PPG is displayed using Plotly.
+
+---
+
+### Setup Instructions
+
+#### 1. Clone the repo
+
+```bash
+git clone https://github.com/your-username/your-repo.git
+cd your-repo
+```
+
+#### 2. Create and activate your virtual environment
+
+```bash
+conda create -n matchup-env python=3.11
+conda activate matchup-env
+```
+
+#### 3. Install dependencies
+
 ```bash
 pip install -r requirements.txt
+```
 
+#### 4. Add your API key
+
+Create a `.env` file in the root directory (same level as `main.py`) and add:
+
+```
+CFB_API_KEY=your_actual_api_key_here
+```
+
+*Don’t commit this file to GitHub. Keep it secret!*
+
+#### 5. Run the app
+
+```bash
 python main.py
-pytest tests/
+```
+
+#### 6. Run the tests
+
+```bash
+pytest
+```
+
+---
+
+### File Structure
+
+```
+.
+├── data_fetcher.py     # API call logic
+├── utils.py            # Stat extraction + score prediction
+├── matchup.py          # Core logic to simulate a game
+├── visuals.py          # Plotly-based graphing
+├── main.py             # Entry point for running the app
+├── test_matchup.py     # Pytest tests
+├── .env                # Your local API key (not tracked)
+├── requirements.txt    # All dependencies
+└── README.md           # This file
+```
+
+---
+
+### 🛡️ License
+
+MIT License. See [LICENSE](./LICENSE) for details.
+
+---
+
+### 🔐 Security Notes
+
+* API keys are stored in `.env` and loaded with `python-dotenv`.
+* `.env` is included in `.gitignore` to prevent accidental exposure.
+
 
 
