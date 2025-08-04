@@ -4,10 +4,16 @@ import requests
 
 load_dotenv()  # Load environment variables from .env
 
-def get_team_stats(team, year):
+def get_api_key():
     api_key = os.getenv("CFB_API_KEY")
     if not api_key:
-        raise Exception("API key not found. Make sure .env file is configured correctly.")
+        print("⚠️  API key not found in .env file.")
+        print("You can get a free API key from https://collegefootballdata.com/key")
+        api_key = input("Please enter your CollegeFootballData API key: ").strip()
+    return api_key
+
+def get_team_stats(team, year):
+    api_key = get_api_key()
 
     headers = {
         "Authorization": f"Bearer {api_key}",
@@ -20,6 +26,7 @@ def get_team_stats(team, year):
         raise Exception(f"Failed to fetch stats for {team}: {response.status_code} — {response.text}")
 
     return response.json()
+
 
 
 
