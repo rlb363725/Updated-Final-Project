@@ -1,23 +1,22 @@
 import plotly.graph_objects as go
+import random
 
 def plot_team_comparison(team1, team2, stats1, stats2):
-    categories = ["Total Yards", "Yards Allowed", "Passing Yards", "Rushing Yards"]
-    team1_vals = [
-        extract_stat(stats1, "totalYards"),
-        extract_stat(stats1, "totalYardsOpponent"),
-        extract_stat(stats1, "netPassingYards"),
-        extract_stat(stats1, "rushingYards")
-    ]
-    team2_vals = [
-        extract_stat(stats2, "totalYards"),
-        extract_stat(stats2, "totalYardsOpponent"),
-        extract_stat(stats2, "netPassingYards"),
-        extract_stat(stats2, "rushingYards")
-    ]
+    def get_stat(stats, name):
+        for stat in stats:
+            if stat.get("statName") == name:
+                return stat.get("statValue", 0.0)
+        return 0.0
+
+    categories = ["totalYards", "netPassingYards", "rushingYards", "turnovers", "thirdDownConversions"]
+    labels = ["Total Yards", "Passing Yards", "Rushing Yards", "Turnovers", "3rd Down Conversions"]
+
+    team1_vals = [get_stat(stats1, stat) for stat in categories]
+    team2_vals = [get_stat(stats2, stat) for stat in categories]
 
     fig = go.Figure(data=[
-        go.Bar(name=team1, x=categories, y=team1_vals),
-        go.Bar(name=team2, x=categories, y=team2_vals)
+        go.Bar(name=team1, x=labels, y=team1_vals),
+        go.Bar(name=team2, x=labels, y=team2_vals)
     ])
     fig.update_layout(
         title="Team Stat Comparison",
@@ -25,69 +24,31 @@ def plot_team_comparison(team1, team2, stats1, stats2):
     )
     fig.show()
 
-def plot_win_probability(team1, team2, score1, score2):
-    total = score1 + score2
-    if total == 0:
-        probs = [0.5, 0.5]
-    else:
-        probs = [score1 / total, score2 / total]
-
+def plot_win_probabilities(team1, team2, prob1, prob2):
     fig = go.Figure(data=[
-        go.Pie(labels=[team1, team2], values=probs, hole=0.4)
+        go.Pie(labels=[team1, team2], values=[prob1, prob2], hole=0.4)
     ])
-    fig.update_layout(title="Win Probability Prediction")
+    fig.update_layout(title="Win Probability")
     fig.show()
 
-def plot_headline_board(team1, team2):
-    headline = f"{team1} vs {team2}: Clash of the Titans!"
-    team1_players = ["QB: J. Smith", "RB: K. Brown", "WR: A. Lee"]
-    team2_players = ["QB: D. Johnson", "RB: M. White", "WR: S. Davis"]
+def plot_headlines_and_players(team1, team2):
+    def generate_fake_players(team):
+        first_names = ["Mike", "Chris", "Jordan", "Taylor", "Alex", "Ryan", "Nick", "James"]
+        last_names = ["Smith", "Johnson", "Brown", "Davis", "Wilson", "Moore", "Taylor", "Anderson"]
+        return [f"{random.choice(first_names)} {random.choice(last_names)}" for _ in range(3)]
+
+    team1_players = generate_fake_players(team1)
+    team2_players = generate_fake_players(team2)
 
     fig = go.Figure()
 
-    # Add headline
-    fig.add_trace(go.Scatter(
-        x=[0.5],
-        y=[1.1],
-        text=[f"<b>{headline}</b>"],
-        mode="text",
-        textfont=dict(size=24),
-        showlegend=False
+    fig.add_trace(go.Table(
+        header=dict(values=[f"{team1} Headlines", f"{team2} Headlines"]),
+        cells=dict(values=[
+            team1_players,
+            team2_players
+        ])
     ))
 
-    # Add player boards
-    fig.add_trace(go.Scatter(
-        x=[0.25]*3,
-        y=[0.8, 0.7, 0.6],
-        text=team1_players,
-        mode="text",
-        textfont=dict(size=18),
-        showlegend=False
-    ))
-
-    fig.add_trace(go.Scatter(
-        x=[0.75]*3,
-        y=[0.8, 0.7, 0.6],
-        text=team2_players,
-        mode="text",
-        textfont=dict(size=18),
-        showlegend=False
-    ))
-
-    fig.update_layout(
-        title="Headline & Player Board",
-        xaxis=dict(visible=False),
-        yaxis=dict(visible=False),
-        height=500,
-        margin=dict(l=0, r=0, t=80, b=0)
-    )
-
+    fig.update_layout(title="Headline Players")
     fig.show()
-
-def extract_stat(stat_list, stat_name):
-    if not isinstance(stat_list, list):
-        return 0.0
-    for stat in stat_list:
-        if isinstance(stat, dict) and stat.get("statName") == stat_name:
-            return float(stat.get("statValue", 0.0))
-    return 0.0

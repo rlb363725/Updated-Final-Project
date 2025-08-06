@@ -1,14 +1,20 @@
 ## College Football Matchup Analyzer
 
-This tool compares two FBS teams' season stats using data from the [CollegeFootballData API](https://collegefootballdata.com/), predicts a score based on offensive/defensive yardage, and visualizes a stat comparison using Plotly.
+This tool compares two FBS teams' season stats using data from the [CollegeFootballData API](https://collegefootballdata.com/), predicts a score based on offensive/defensive yardage, and visualizes multiple stat comparisons using Plotly.
+
+---
 
 ### Features
 
-* Retrieves live team stats from the CollegeFootballData API
-* Predicts scores based on total offensive and defensive yards
-* Visualizes side-by-side stat comparisons using Plotly
-* Command-line interface for interactive use
-* Includes automated tests using Pytest
+- Retrieves live team stats from the CollegeFootballData API  
+- Predicts scores based on total offensive and defensive yards  
+- Prints stat summaries and predicted win probabilities in the terminal  
+- Visualizes:
+  • Side-by-side stat comparison (bar chart)  
+  • Win probability pie chart  
+  • Interactive player headlines board  
+- Command-line interface  
+- Automated testing via Pytest
 
 ---
 
@@ -16,8 +22,12 @@ This tool compares two FBS teams' season stats using data from the [CollegeFootb
 
 1. You input two FBS teams and a season year.
 2. The app fetches season-long team stats from the API.
-3. It calculates predicted scores using total yards gained and allowed.
-4. A bar graph of offensive and defensive PPG is displayed using Plotly.
+3. It calculates predicted scores based on yardage.
+4. It prints each team’s key stats and win odds in the terminal.
+5. It displays three visuals:  
+   - A stat comparison bar chart  
+   - A win probability pie chart  
+   - An interactive "headline players" table
 
 ---
 
@@ -28,72 +38,54 @@ This tool compares two FBS teams' season stats using data from the [CollegeFootb
 ```bash
 git clone https://github.com/your-username/your-repo.git
 cd your-repo
-```
 
-#### 2. Create and activate your virtual environment
+### 2. Create and activate your virtual environment
 
-```bash
 conda create -n matchup-env python=3.11
 conda activate matchup-env
-```
 
-#### 3. Install dependencies
+### 3. Install dependencies
 
-```bash
 pip install -r requirements.txt
-```
 
-#### 4. Add your API key
+### 4. Add your API key
 
-Create a `.env` file in the root directory (same level as `main.py`) and add:
-
-```
 CFB_API_KEY=your_actual_api_key_here
-```
 
-*Don’t commit this file to GitHub. Keep it secret!*
+### 5. Run the app
 
-#### 5. Run the app
-
-```bash
 python main.py
-```
 
-#### 6. Run the tests
+### 6. Run the tests
 
-```bash
 pytest
-```
 
----
 
 ### File Structure
 
-```
 .
 ├── data_fetcher.py     # API call logic
-├── utils.py            # Stat extraction + score prediction
-├── matchup.py          # Core logic to simulate a game
-├── visuals.py          # Plotly-based graphing
-├── main.py             # Entry point for running the app
-├── test_matchup.py     # Pytest tests
-├── .env                # Your local API key (not tracked)
-├── requirements.txt    # All dependencies
+├── utils.py            # Stat extraction + prediction + win odds
+├── matchup.py          # Core simulation and print logic
+├── visuals.py          # Plotly visuals (bar, pie, table)
+├── main.py             # User interaction and control
+├── test_matchup.py     # Pytest-based tests
+├── .env                # Your local API key (ignored by Git)
+├── requirements.txt    # Dependencies
 └── README.md           # This file
-```
 
----
 
 ### License
 
-MIT License. See [LICENSE](./LICENSE) for details.
-
----
+MIT License. See LICENSE for details.
 
 ### Security Notes
 
-* API keys are stored in `.env` and loaded with `python-dotenv`.
-* `.env` is included in `.gitignore` to prevent accidental exposure.
+API keys are securely stored in .env using python-dotenv
+
+.env is excluded from Git tracking via .gitignore
+
+Always use version control responsibly when working with API credentials
 
 
 
