@@ -40,6 +40,17 @@ def predict_score(stats1, stats2):
         return 0, 0  # Always return a tuple to avoid unpacking error
 
 
+def calculate_win_probability(score1, score2):
+    """
+    Converts predicted scores into win probabilities.
+    Returns a tuple: (team1_prob, team2_prob)
+    """
+    total = score1 + score2
+    if total == 0:
+        return 0.5, 0.5
+    team1_prob = score1 / total
+    team2_prob = score2 / total
+    return team1_prob, team2_prob
 
 
 
