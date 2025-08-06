@@ -1,9 +1,11 @@
 import os
 from dotenv import load_dotenv
 import requests
+from functools import lru_cache
 
 load_dotenv()  # Load environment variables from .env
 
+@lru_cache(maxsize=None)
 def get_api_key():
     api_key = os.getenv("CFB_API_KEY")
     if not api_key:

@@ -48,8 +48,8 @@ def calculate_win_probability(score1, score2):
     total = score1 + score2
     if total == 0:
         return 0.5, 0.5
-    team1_prob = score1 / total
-    team2_prob = score2 / total
+    team1_prob = round(score1 / total, 4)
+    team2_prob = round(score2 / total, 4)
     return team1_prob, team2_prob
 
 
