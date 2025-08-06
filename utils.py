@@ -9,7 +9,11 @@ def extract_stat(stat_list, stat_name):
 
     for stat in stat_list:
         if isinstance(stat, dict) and stat.get("statName") == stat_name:
-            return float(stat.get("statValue", 0.0))
+            try:
+                return float(stat.get("statValue", 0.0))
+            except (TypeError, ValueError):
+                print(f"DEBUG: Could not convert stat value to float for '{stat_name}'")
+                return 0.0
 
     print(f"DEBUG: Stat '{stat_name}' not found in list.")
     return 0.0
@@ -37,20 +41,53 @@ def predict_score(stats1, stats2):
 
     except Exception as e:
         print("ERROR in predict_score:", e)
-        return 0, 0  # Always return a tuple to avoid unpacking error
+        return 0, 0
 
 
-def calculate_win_probability(score1, score2):
+def extract_player_stats(player_list, stat_type):
     """
-    Converts predicted scores into win probabilities.
-    Returns a tuple: (team1_prob, team2_prob)
+    Filters and extracts stats for players matching the specified stat type.
+    Returns a list of tuples: (player_name, stat_value).
     """
-    total = score1 + score2
-    if total == 0:
-        return 0.5, 0.5
-    team1_prob = round(score1 / total, 4)
-    team2_prob = round(score2 / total, 4)
-    return team1_prob, team2_prob
+    if not isinstance(player_list, list):
+        print(f"DEBUG: Expected list for player_list, got {type(player_list)}")
+        return []
+
+    results = []
+    for player in player_list:
+        if player.get("statType") == stat_type:
+            try:
+                value = float(player.get("stat", 0.0))
+                results.append((player.get("player", "Unknown"), value))
+            except (TypeError, ValueError):
+                print(f"DEBUG: Failed to convert stat for player {player.get('player', 'Unknown')}")
+    return results
+
+
+def summarize_player_stats(player_list, stat_type):
+    """
+    Summarizes player statistics by stat_type.
+    Returns a dictionary with total, average, max, min, and count of players.
+    """
+    extracted = extract_player_stats(player_list, stat_type)
+    values = [v for _, v in extracted]
+
+    if not values:
+        return {
+            "total": 0.0,
+            "average": 0.0,
+            "max": 0.0,
+            "min": 0.0,
+            "count": 0
+        }
+
+    return {
+        "total": sum(values),
+        "average": sum(values) / len(values),
+        "max": max(values),
+        "min": min(values),
+        "count": len(values)
+    }
 
 
 

@@ -1,54 +1,60 @@
 import plotly.graph_objects as go
-import random
+from utils import extract_stat
 
 def plot_team_comparison(team1, team2, stats1, stats2):
-    def get_stat(stats, name):
-        for stat in stats:
-            if stat.get("statName") == name:
-                return stat.get("statValue", 0.0)
-        return 0.0
+    # Extract key stats
+    team1_off_yards = extract_stat(stats1, "totalYards")
+    team2_off_yards = extract_stat(stats2, "totalYards")
 
-    categories = ["totalYards", "netPassingYards", "rushingYards", "turnovers", "thirdDownConversions"]
-    labels = ["Total Yards", "Passing Yards", "Rushing Yards", "Turnovers", "3rd Down Conversions"]
+    team1_def_yards = extract_stat(stats1, "totalYardsOpponent")
+    team2_def_yards = extract_stat(stats2, "totalYardsOpponent")
 
-    team1_vals = [get_stat(stats1, stat) for stat in categories]
-    team2_vals = [get_stat(stats2, stat) for stat in categories]
-
-    fig = go.Figure(data=[
-        go.Bar(name=team1, x=labels, y=team1_vals),
-        go.Bar(name=team2, x=labels, y=team2_vals)
-    ])
-    fig.update_layout(
-        title="Team Stat Comparison",
-        barmode='group'
-    )
-    fig.show()
-
-def plot_win_probabilities(team1, team2, prob1, prob2):
-    fig = go.Figure(data=[
-        go.Pie(labels=[team1, team2], values=[prob1, prob2], hole=0.4)
-    ])
-    fig.update_layout(title="Win Probability")
-    fig.show()
-
-def plot_headlines_and_players(team1, team2):
-    def generate_fake_players(team):
-        first_names = ["Mike", "Chris", "Jordan", "Taylor", "Alex", "Ryan", "Nick", "James"]
-        last_names = ["Smith", "Johnson", "Brown", "Davis", "Wilson", "Moore", "Taylor", "Anderson"]
-        return [f"{random.choice(first_names)} {random.choice(last_names)}" for _ in range(3)]
-
-    team1_players = generate_fake_players(team1)
-    team2_players = generate_fake_players(team2)
+    categories = ["Offensive Yards", "Defensive Yards Allowed"]
+    team1_values = [team1_off_yards, team1_def_yards]
+    team2_values = [team2_off_yards, team2_def_yards]
 
     fig = go.Figure()
 
-    fig.add_trace(go.Table(
-        header=dict(values=[f"{team1} Headlines", f"{team2} Headlines"]),
-        cells=dict(values=[
-            team1_players,
-            team2_players
-        ])
+    fig.add_trace(go.Bar(
+        x=categories,
+        y=team1_values,
+        name=team1
     ))
 
-    fig.update_layout(title="Headline Players")
+    fig.add_trace(go.Bar(
+        x=categories,
+        y=team2_values,
+        name=team2
+    ))
+
+    fig.update_layout(
+        title=f"{team1} vs {team2} - Yardage Comparison",
+        xaxis_title="Category",
+        yaxis_title="Yards",
+        barmode='group'
+    )
+
+    fig.show()
+
+
+def plot_player_comparison(player_stats, stat_type="passingYards", top_n=5):
+    """
+    Plot comparison of top N players by a specific stat.
+    `player_stats` should be the result of get_team_players(team, year)
+    """
+    filtered_players = [p for p in player_stats if p["statType"] == stat_type]
+    sorted_players = sorted(filtered_players, key=lambda p: float(p["stat"]), reverse=True)[:top_n]
+
+    names = [p["player"] for p in sorted_players]
+    stats = [float(p["stat"]) for p in sorted_players]
+
+    fig = go.Figure([go.Bar(x=names, y=stats)])
+
+    fig.update_layout(
+        title=f"Top {top_n} Players by {stat_type}",
+        xaxis_title="Player",
+        yaxis_title=stat_type,
+        template="plotly_white"
+    )
+
     fig.show()
