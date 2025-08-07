@@ -15,6 +15,13 @@ def simulate_matchup(team1, team2, year):
     players1 = get_team_players(team1, year)
     players2 = get_team_players(team2, year)
 
+    # --- DEBUG: Print raw player data ---
+    print(f"--- Raw Player Data for {team1} ---")
+    print(players1[:2])  # Print first 2 players to avoid too much output
+    print(f"--- Raw Player Data for {team2} ---")
+    print(players2[:2])  # Print first 2 players to avoid too much output
+    # --- END DEBUG ---
+
     # Predict score and win probability
     score1, score2 = predict_score(stats1, stats2)
     win_prob1, win_prob2 = calculate_win_probability(score1, score2)
@@ -46,8 +53,8 @@ def simulate_matchup(team1, team2, year):
     # Display visualizations
     plot_team_comparison(team1, team2, stats1, stats2)
     plot_win_probabilities(team1, team2, win_prob1, win_prob2)
-    plot_player_comparison(players1, stat_type="passing.yards")
-    plot_player_comparison(players2, stat_type="rushing.yards")
+    plot_player_comparison(players1, stat_type="passingYards")
+    plot_player_comparison(players2, stat_type="rushingYards")
 
     return {
         "winner": winner,
