@@ -27,13 +27,17 @@ def simulate_matchup(team1, team2, year):
         winner = team2
 
     # Print stat summaries
-    print(f"\n--- 📊 Stat Summary ---")
-    print(f"{team1} - Total Yards: {extract_stat(stats1, 'totalYards')}, "
-          f"Passing: {extract_stat(stats1, 'netPassingYards')}, "
-          f"Rushing: {extract_stat(stats1, 'rushingYards')}")
-    print(f"{team2} - Total Yards: {extract_stat(stats2, 'totalYards')}, "
-          f"Passing: {extract_stat(stats2, 'netPassingYards')}, "
-          f"Rushing: {extract_stat(stats2, 'rushingYards')}")
+    print(f"\n--- 📊 Stat Summary (Per Game Averages) ---")
+    print(
+        f"{team1} - Total Yards: {extract_stat(stats1, 'totalYards', key='statAverage')}, "
+        f"Passing: {extract_stat(stats1, 'netPassingYards', key='statAverage')}, "
+        f"Rushing: {extract_stat(stats1, 'rushingYards', key='statAverage')}"
+    )
+    print(
+        f"{team2} - Total Yards: {extract_stat(stats2, 'totalYards', key='statAverage')}, "
+        f"Passing: {extract_stat(stats2, 'netPassingYards', key='statAverage')}, "
+        f"Rushing: {extract_stat(stats2, 'rushingYards', key='statAverage')}"
+    )
 
     # Print result
     print(f"\n--- 🏆 Matchup Result ---")
