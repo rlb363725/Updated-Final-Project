@@ -7,11 +7,20 @@ load_dotenv()  # Load environment variables from .env
 
 @lru_cache(maxsize=None)
 def get_api_key():
+    """Return the API key from the environment.
+
+    Previously this function prompted the user for input if the key was not
+    found which caused automated environments (like the tests in this kata) to
+    hang waiting for user input.  Instead we now simply warn and return an
+    empty string so callers can decide how to proceed.
+    """
     api_key = os.getenv("CFB_API_KEY")
     if not api_key:
-        print("⚠️  API key not found in .env file.")
-        print("You can get a free API key from https://collegefootballdata.com/key")
-        api_key = input("Please enter your CollegeFootballData API key: ").strip()
+        # Avoid interactive prompts which break non‑interactive runs
+        print(
+            "⚠️  API key not found in environment. Requests will be unauthenticated"
+        )
+        return ""
     return api_key
 
 def get_team_stats(team, year):
@@ -24,12 +33,17 @@ def get_team_stats(team, year):
         "accept": "application/json"
     }
     url = f"https://api.collegefootballdata.com/stats/season?year={year}&team={team}"
-    response = requests.get(url, headers=headers)
-
-    if response.status_code != 200:
-        raise Exception(f"Failed to fetch team stats for {team}: {response.status_code} — {response.text}")
-
-    return response.json() or []
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        if response.status_code != 200:
+            print(
+                f"⚠️  Warning: Failed to fetch team stats for {team}: {response.status_code} — {response.text}"
+            )
+            return []
+        return response.json() or []
+    except requests.RequestException as e:
+        print(f"⚠️  Warning: Exception fetching team stats for {team}: {e}")
+        return []
 
 def get_team_players(team, year):
     """
@@ -41,13 +55,17 @@ def get_team_players(team, year):
         "accept": "application/json"
     }
     url = f"https://api.collegefootballdata.com/roster?team={team}&year={year}"
-    response = requests.get(url, headers=headers)
-
-    if response.status_code != 200:
-        print(f"⚠️  Warning: Failed to fetch roster for {team}: {response.status_code} — {response.text}")
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        if response.status_code != 200:
+            print(
+                f"⚠️  Warning: Failed to fetch roster for {team}: {response.status_code} — {response.text}"
+            )
+            return []
+        return response.json() or []
+    except requests.RequestException as e:
+        print(f"⚠️  Warning: Exception fetching roster for {team}: {e}")
         return []
-
-    return response.json() or []
 
 def search_player(name):
     """
@@ -59,12 +77,17 @@ def search_player(name):
         "accept": "application/json"
     }
     url = f"https://api.collegefootballdata.com/player/search?searchTerm={name}"
-    response = requests.get(url, headers=headers)
-
-    if response.status_code != 200:
-        raise Exception(f"Failed to search for player {name}: {response.status_code} — {response.text}")
-
-    return response.json() or []
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        if response.status_code != 200:
+            print(
+                f"⚠️  Warning: Failed to search for player {name}: {response.status_code} — {response.text}"
+            )
+            return []
+        return response.json() or []
+    except requests.RequestException as e:
+        print(f"⚠️  Warning: Exception searching for player {name}: {e}")
+        return []
 
 
 
