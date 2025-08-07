@@ -1,5 +1,13 @@
 import plotly.graph_objects as go
-from utils import extract_stat
+from utils import extract_stat, extract_player_stats
+
+__all__ = [
+    "plot_team_comparison",
+    "plot_rosters",
+    "plot_win_probabilities",
+    "plot_headlines_and_players",
+    "plot_player_comparison",
+]
 
 def plot_team_comparison(team1, team2, stats1, stats2):
     # Extract key stats
