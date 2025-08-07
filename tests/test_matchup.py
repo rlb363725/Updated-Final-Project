@@ -3,20 +3,31 @@ from matchup import simulate_matchup
 
 def test_simulate_matchup_runs():
     result = simulate_matchup("Georgia", "Michigan", 2023)
-    assert "Winner" in result
+    assert "winner" in result
+    assert isinstance(result["score1"], int)
+    assert isinstance(result["score2"], int)
 
+# Mock version of get_team_stats to inject test data
 def mock_get_team_stats(team, year):
-    # Fake stats for controlled testing
     if team == "Ohio State":
-        return [{"category": "offense", "stat": 500}]
+        return [
+            {"statName": "games", "statValue": 1},
+            {"statName": "totalYards", "statValue": 500},
+            {"statName": "totalYardsOpponent", "statValue": 350}
+        ]
     elif team == "Michigan":
-        return [{"category": "offense", "stat": 450}]
+        return [
+            {"statName": "games", "statValue": 1},
+            {"statName": "totalYards", "statValue": 450},
+            {"statName": "totalYardsOpponent", "statValue": 400}
+        ]
     return []
 
 def test_simulate_matchup_with_mock(monkeypatch):
-    # Monkeypatch the real data_fetcher.get_team_stats
+    # Patch matchup.get_team_stats to use mock instead of real API
     monkeypatch.setattr("matchup.get_team_stats", mock_get_team_stats)
 
-    result = simulate_matchup("Ohio State", "Michigan", "2023")
-    assert "
-
+    result = simulate_matchup("Ohio State", "Michigan", 2023)
+    assert result["winner"] in ["Ohio State", "Michigan", "Tie"]
+    assert isinstance(result["score1"], int)
+    assert isinstance(result["score2"], int)
