@@ -58,3 +58,23 @@ def plot_player_comparison(player_stats, stat_type="passingYards", top_n=5):
     )
 
     fig.show()
+import plotly.graph_objects as go
+
+def plot_win_probabilities(team1, team2, win_prob1, win_prob2):
+    """
+    Plots a pie chart of win probabilities.
+    """
+    fig = go.Figure(data=[
+        go.Pie(labels=[team1, team2],
+               values=[win_prob1, win_prob2],
+               hole=0.4,
+               hoverinfo='label+percent',
+               textinfo='label+value')
+    ])
+    
+    fig.update_layout(
+        title_text=f"Win Probabilities: {team1} vs {team2}",
+        annotations=[dict(text='Win %', x=0.5, y=0.5, font_size=18, showarrow=False)]
+    )
+    
+    fig.show()
