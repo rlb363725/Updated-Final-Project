@@ -29,7 +29,7 @@ def get_team_stats(team, year):
     if response.status_code != 200:
         raise Exception(f"Failed to fetch team stats for {team}: {response.status_code} — {response.text}")
 
-    return response.json()
+    return response.json() or []
 
 def get_team_players(team, year):
     """
@@ -40,13 +40,13 @@ def get_team_players(team, year):
         "Authorization": f"Bearer {api_key}",
         "accept": "application/json"
     }
-    url = f"https://api.collegefootballdata.com/stats/player/season?year={year}&team={team}"
+    url = f"https://api.collegefootballdata.com/roster?team={team}&year={year}"
     response = requests.get(url, headers=headers)
 
     if response.status_code != 200:
         raise Exception(f"Failed to fetch player stats for {team}: {response.status_code} — {response.text}")
 
-    return response.json()
+    return response.json() or []
 
 def search_player(name):
     """
