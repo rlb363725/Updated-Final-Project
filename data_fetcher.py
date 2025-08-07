@@ -33,18 +33,18 @@ def get_team_stats(team, year):
 
 def get_team_players(team, year):
     """
-    Fetch real player stats for a given team and season.
+    Fetch team roster for a given team and season.
     """
     api_key = get_api_key()
     headers = {
         "Authorization": f"Bearer {api_key}",
         "accept": "application/json"
     }
-    url = f"https://api.collegefootballdata.com/stats/player/season?year={year}&team={team}"
+    url = f"https://api.collegefootballdata.com/roster?team={team}&year={year}"
     response = requests.get(url, headers=headers)
 
     if response.status_code != 200:
-        print(f"⚠️  Warning: Failed to fetch player stats for {team}: {response.status_code} — {response.text}")
+        print(f"⚠️  Warning: Failed to fetch roster for {team}: {response.status_code} — {response.text}")
         return []
 
     return response.json() or []
