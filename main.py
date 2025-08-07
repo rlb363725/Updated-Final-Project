@@ -29,7 +29,7 @@ def main():
             players1 = get_team_players(team1, year)
             players2 = get_team_players(team2, year)
 
-            stat_type = input("Enter stat type to summarize (e.g., rushingYards, passingYards): ").strip()
+            stat_type = input("Enter stat type to summarize (e.g., rushing.yards, passing.yards, receiving.yards, fumbles.rec, tackles, sacks, interceptions): ").strip()
 
             print(f"\n📊 {team1} {stat_type} Summary:")
             summary1 = summarize_player_stats(players1, stat_type)
@@ -45,7 +45,7 @@ def main():
             players1 = get_team_players(team1, year)
             players2 = get_team_players(team2, year)
 
-            stat_type = input("Enter stat type to compare top players (e.g., rushingYards): ").strip()
+            stat_type = input("Enter stat type to compare top players (e.g., rushing.yards, passing.yards, receiving.yards, fumbles.rec, tackles, sacks, interceptions): ").strip()
             top_n = input("How many top players to display per team? (e.g., 5): ").strip()
 
             try:

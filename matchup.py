@@ -39,6 +39,10 @@ def simulate_matchup(team1, team2, year):
     print(f"\n--- 🏆 Matchup Result ---")
     print(f"{team1} {score1} - {score2} {team2} → Winner: {winner}")
 
+    # Summarize and print player stats
+    print(summarize_player_stats(players1, team1))
+    print(summarize_player_stats(players2, team2))
+
     # Display visualizations
     plot_team_comparison(team1, team2, stats1, stats2)
     plot_win_probabilities(team1, team2, win_prob1, win_prob2)
