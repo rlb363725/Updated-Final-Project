@@ -58,7 +58,6 @@ def plot_rosters(team1, players1, team2, players2):
 
     fig.update_layout(title_text=f"{team1} vs {team2} Roster")
     fig.show()
-import plotly.graph_objects as go
 
 def plot_win_probabilities(team1, team2, win_prob1, win_prob2):
     """
