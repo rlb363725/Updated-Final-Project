@@ -63,7 +63,7 @@ def search_player(name):
     if response.status_code != 200:
         raise Exception(f"Failed to search for player {name}: {response.status_code} — {response.text}")
 
-    return response.json()
+    return response.json() or []
 
 
 
