@@ -42,6 +42,12 @@ def simulate_matchup(team1, team2, year):
     # Display visualizations
     plot_team_comparison(team1, team2, stats1, stats2)
     plot_win_probabilities(team1, team2, win_prob1, win_prob2)
-    plot_player_comparison(players1, stat_type="passingYards")
-    plot_player_comparison(players2, stat_type="rushingYards")
+    plot_player_comparison(players1, stat_type="passing.yards")
+    plot_player_comparison(players2, stat_type="rushing.yards")
+
+    return {
+        "winner": winner,
+        "score1": score1,
+        "score2": score2
+    }
 
