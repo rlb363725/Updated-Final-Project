@@ -67,35 +67,6 @@ def plot_rosters(team1, players1, team2, players2):
     fig.update_layout(title_text=f"{team1} vs {team2} Roster")
     fig.show()
 
-
-def plot_player_comparison(players, stat_type, top_n=5):
-    """Create a bar chart comparing top players for a stat type.
-
-    Parameters
-    ----------
-    players : list
-        List of player statistic dictionaries.
-    stat_type : str
-        The statistic type to compare (e.g., ``"rushing.yards"``).
-    top_n : int, optional
-        Number of top players to display, by default 5.
-    """
-
-    stats = extract_player_stats(players, stat_type)
-    # Sort players by stat value descending and take top N
-    top_players = sorted(stats, key=lambda x: x[1], reverse=True)[:top_n]
-
-    names = [name for name, _ in top_players]
-    values = [value for _, value in top_players]
-
-    fig = go.Figure(data=[go.Bar(x=names, y=values)])
-    fig.update_layout(
-        title=f"Top {len(names)} Players - {stat_type}",
-        xaxis_title="Player",
-        yaxis_title=stat_type,
-    )
-    fig.show()
-
 def plot_win_probabilities(team1, team2, win_prob1, win_prob2):
     """
     Plots a pie chart of win probabilities.
