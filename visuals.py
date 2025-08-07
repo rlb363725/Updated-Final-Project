@@ -11,11 +11,11 @@ __all__ = [
 
 def plot_team_comparison(team1, team2, stats1, stats2):
     # Extract key stats
-    team1_off_yards = extract_stat(stats1, "totalYards")
-    team2_off_yards = extract_stat(stats2, "totalYards")
+    team1_off_yards = extract_stat(stats1, "totalYards", key="statAverage")
+    team2_off_yards = extract_stat(stats2, "totalYards", key="statAverage")
 
-    team1_def_yards = extract_stat(stats1, "totalYardsOpponent")
-    team2_def_yards = extract_stat(stats2, "totalYardsOpponent")
+    team1_def_yards = extract_stat(stats1, "totalYardsOpponent", key="statAverage")
+    team2_def_yards = extract_stat(stats2, "totalYardsOpponent", key="statAverage")
 
     categories = ["Offensive Yards", "Defensive Yards Allowed"]
     team1_values = [team1_off_yards, team1_def_yards]

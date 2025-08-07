@@ -1,7 +1,9 @@
-def extract_stat(stat_list, stat_name):
+def extract_stat(stat_list, stat_name, key="statValue"):
     """
     Extracts a stat value from a list of stat dictionaries based on stat name.
-    Returns 0.0 if the stat is not found.
+    The ``key`` parameter controls which value to pull (e.g., ``statValue`` for
+    totals or ``statAverage`` for per-game averages). Returns 0.0 if the stat is
+    not found.
     """
     if not isinstance(stat_list, list):
         print(f"DEBUG: Expected list for stat_list, got {type(stat_list)}")
@@ -10,7 +12,7 @@ def extract_stat(stat_list, stat_name):
     for stat in stat_list:
         if isinstance(stat, dict) and stat.get("statName") == stat_name:
             try:
-                return float(stat.get("statValue", 0.0))
+                return float(stat.get(key, 0.0))
             except (TypeError, ValueError):
                 print(f"DEBUG: Could not convert stat value to float for '{stat_name}'")
                 return 0.0
@@ -21,18 +23,15 @@ def extract_stat(stat_list, stat_name):
 
 def predict_score(stats1, stats2):
     """
-    Predicts a realistic score for each team based on total yards and opponent defense.
-    Returns a tuple of (score1, score2). Will NEVER return None.
+    Predicts a realistic score for each team based on per-game yardage averages
+    and opponent defensive averages. Returns a tuple of (score1, score2).
     """
     try:
-        games1 = extract_stat(stats1, "games") or 1
-        games2 = extract_stat(stats2, "games") or 1
+        team1_off_yards_pg = extract_stat(stats1, "totalYards", key="statAverage")
+        team2_off_yards_pg = extract_stat(stats2, "totalYards", key="statAverage")
 
-        team1_off_yards_pg = extract_stat(stats1, "totalYards") / games1
-        team2_off_yards_pg = extract_stat(stats2, "totalYards") / games2
-
-        team1_def_yards_pg = extract_stat(stats1, "totalYardsOpponent") / games1
-        team2_def_yards_pg = extract_stat(stats2, "totalYardsOpponent") / games2
+        team1_def_yards_pg = extract_stat(stats1, "totalYardsOpponent", key="statAverage")
+        team2_def_yards_pg = extract_stat(stats2, "totalYardsOpponent", key="statAverage")
 
         team1_score = int(((team1_off_yards_pg + team2_def_yards_pg) / 2) * 0.1)
         team2_score = int(((team2_off_yards_pg + team1_def_yards_pg) / 2) * 0.1)
