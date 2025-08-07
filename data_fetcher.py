@@ -3,6 +3,10 @@ import sys
 from dotenv import load_dotenv
 import requests
 from functools import lru_cache
+try:
+    import cfbd
+except ImportError:  # pragma: no cover - handle missing dependency gracefully
+    cfbd = None
 
 load_dotenv()  # Load environment variables from .env
 
@@ -32,25 +36,50 @@ def get_api_key():
 
 def get_team_stats(team, year):
     """
-    Fetch season-level team stats from CollegeFootballData API.
+    Fetch season-level team stats from CollegeFootballData API using the official
+    ``cfbd`` client. Both total values and per-game averages are returned for
+    downstream consumption.
     """
-    api_key = get_api_key()
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "accept": "application/json"
-    }
-    url = f"https://api.collegefootballdata.com/stats/season?year={year}&team={team}"
-    try:
-        response = requests.get(url, headers=headers, timeout=10)
-        if response.status_code != 200:
-            print(
-                f"⚠️  Warning: Failed to fetch team stats for {team}: {response.status_code} — {response.text}"
-            )
-            return []
-        return response.json() or []
-    except requests.RequestException as e:
-        print(f"⚠️  Warning: Exception fetching team stats for {team}: {e}")
+
+    # Configure API client
+    if cfbd is None:
+        print("⚠️  cfbd library not installed. Returning empty stats list.")
         return []
+
+    configuration = cfbd.Configuration()
+    api_key = get_api_key()
+    if api_key:
+        configuration.api_key["Authorization"] = api_key
+        configuration.api_key_prefix["Authorization"] = "Bearer"
+
+    try:
+        with cfbd.ApiClient(configuration) as api_client:
+            api_instance = cfbd.StatsApi(api_client)
+            data = api_instance.get_team_season_stats(year=year, team=team)
+    except Exception as e:  # Broad catch to avoid failing in environments without network
+        print(
+            f"⚠️  Warning: Exception fetching team stats for {team}: {e}"
+        )
+        return []
+
+    if not data:
+        return []
+
+    team_stats = data[0]
+    games = getattr(team_stats, "games", 0) or 0
+    results = [{"statName": "games", "statValue": games}]
+
+    for stat in getattr(team_stats, "stats", []) or []:
+        name = getattr(stat, "stat_name", "")
+        total = float(getattr(stat, "stat_value", 0) or 0)
+        average = total / games if games else 0.0
+        results.append({
+            "statName": name,
+            "statValue": total,
+            "statAverage": average,
+        })
+
+    return results
 
 def get_team_players(team, year):
     """

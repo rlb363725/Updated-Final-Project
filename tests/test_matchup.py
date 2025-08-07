@@ -1,4 +1,11 @@
+import os
+import sys
+
 import pytest
+
+# Ensure project root is on the Python path for direct module imports
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
 from matchup import simulate_matchup
 
 def test_simulate_matchup_runs():
@@ -12,14 +19,14 @@ def mock_get_team_stats(team, year):
     if team == "Ohio State":
         return [
             {"statName": "games", "statValue": 1},
-            {"statName": "totalYards", "statValue": 500},
-            {"statName": "totalYardsOpponent", "statValue": 350}
+            {"statName": "totalYards", "statValue": 500, "statAverage": 500},
+            {"statName": "totalYardsOpponent", "statValue": 350, "statAverage": 350}
         ]
     elif team == "Michigan":
         return [
             {"statName": "games", "statValue": 1},
-            {"statName": "totalYards", "statValue": 450},
-            {"statName": "totalYardsOpponent", "statValue": 400}
+            {"statName": "totalYards", "statValue": 450, "statAverage": 450},
+            {"statName": "totalYardsOpponent", "statValue": 400, "statAverage": 400}
         ]
     return []
 
