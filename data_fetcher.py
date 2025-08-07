@@ -35,7 +35,11 @@ def get_api_key():
         return ""
 
     # Prompt the user once for their API key
-    api_key = input("Enter your CollegeFootballData API key: ").strip()
+    api_key = input(
+        "Enter your CollegeFootballData API key (free at collegefootballdata.com): "
+    ).strip()
+    if not api_key:
+        print("You can obtain a free key at https://collegefootballdata.com")
     os.environ["CFB_API_KEY"] = api_key
     return api_key
 
