@@ -1,11 +1,15 @@
 from matchup import simulate_matchup
-from data_fetcher import get_team_players
+from data_fetcher import get_team_players, get_api_key
 from utils import summarize_player_stats
 from visuals import plot_player_comparison
 
 def main():
     print("🏈 College Football Matchup Analyzer")
     print("------------------------------------")
+
+    # Prompt for API key if it hasn't been provided via environment variable.
+    # This ensures the user is asked at least once per session.
+    get_api_key()
 
     team1 = input("Enter the first team (e.g., Ohio State): ")
     team2 = input("Enter the second team (e.g., Michigan): ")

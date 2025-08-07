@@ -52,6 +52,9 @@ pip install -r requirements.txt
 
 CFB_API_KEY=your_actual_api_key_here
 
+If this variable is not set, the application will prompt you for your key the
+first time it runs.
+
 ### 5. Run the app
 
 python main.py

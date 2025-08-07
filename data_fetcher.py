@@ -1,4 +1,5 @@
 import os
+import sys
 from dotenv import load_dotenv
 import requests
 from functools import lru_cache
@@ -7,20 +8,26 @@ load_dotenv()  # Load environment variables from .env
 
 @lru_cache(maxsize=None)
 def get_api_key():
-    """Return the API key from the environment.
+    """Retrieve the CFBD API key.
 
-    Previously this function prompted the user for input if the key was not
-    found which caused automated environments (like the tests in this kata) to
-    hang waiting for user input.  Instead we now simply warn and return an
-    empty string so callers can decide how to proceed.
+    The key is first pulled from the ``CFB_API_KEY`` environment variable. If
+    it is not present and the session is interactive, the user is prompted once
+    for the key.  Non-interactive sessions (such as automated tests) skip the
+    prompt and proceed without a key.
     """
     api_key = os.getenv("CFB_API_KEY")
-    if not api_key:
-        # Avoid interactive prompts which break non‑interactive runs
+    if api_key:
+        return api_key
+
+    if os.getenv("PYTEST_CURRENT_TEST") or not sys.stdin.isatty():
         print(
             "⚠️  API key not found in environment. Requests will be unauthenticated"
         )
         return ""
+
+    # Prompt the user once for their API key
+    api_key = input("Enter your CollegeFootballData API key: ").strip()
+    os.environ["CFB_API_KEY"] = api_key
     return api_key
 
 def get_team_stats(team, year):
