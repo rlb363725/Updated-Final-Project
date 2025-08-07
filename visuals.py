@@ -91,3 +91,39 @@ def plot_headlines_and_players(team1, team2):
     Placeholder for future implementation of headlines or player highlights.
     """
     print(f"[Visual Placeholder] Headlines and player highlights for {team1} vs {team2}.")
+
+
+def plot_player_comparison(players, stat_type, top_n):
+    """Display a bar chart comparing top players for a given statistic.
+
+    Parameters
+    ----------
+    players : list
+        Combined list of player dictionaries from both teams.
+    stat_type : str
+        The statistic key to compare (e.g., ``rushing.yards``).
+    top_n : int
+        Number of top players to display.
+    """
+
+    # Extract (player_name, value) tuples for the requested stat
+    stats = extract_player_stats(players, stat_type)
+
+    if not stats:
+        print(f"No player stats found for stat type '{stat_type}'.")
+        return
+
+    # Sort players by stat value in descending order and take the top N
+    top_players = sorted(stats, key=lambda x: x[1], reverse=True)[:top_n]
+
+    names = [name for name, _ in top_players]
+    values = [value for _, value in top_players]
+
+    fig = go.Figure([go.Bar(x=names, y=values)])
+    fig.update_layout(
+        title=f"Top {len(top_players)} Players by {stat_type}",
+        xaxis_title="Player",
+        yaxis_title=stat_type,
+    )
+
+    fig.show()
