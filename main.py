@@ -1,5 +1,5 @@
 from matchup import simulate_matchup
-from data_puller import get_team_players
+from data_fetcher import get_team_players
 from utils import summarize_player_stats, extract_player_stats
 from visuals import plot_player_comparison
 
